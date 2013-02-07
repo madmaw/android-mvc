@@ -12,6 +12,7 @@ public class Command implements Comparable<Command>{
 		Search, 
 		Help, 
 		Quit,
+        MoreOnly,
         Secret
 		
 	}

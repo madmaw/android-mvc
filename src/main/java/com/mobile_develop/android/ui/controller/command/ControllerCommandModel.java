@@ -1,6 +1,7 @@
 package com.mobile_develop.android.ui.controller.command;
 
 import android.app.Activity;
+import android.view.View;
 import com.mobile_develop.android.ui.Command;
 import com.mobile_develop.android.ui.controller.AbstractModel;
 import com.mobile_develop.android.ui.controller.Controller;
@@ -56,7 +57,7 @@ public class ControllerCommandModel extends AbstractModel implements CommandMode
             result = new ArrayList<Command>(commands.size());
             for (int i = 0; i < commands.size(); i++) {
                 Command command = commands.get(i);
-                if ((command.getStyle() != Command.CommandStyle.Back || includeBack) && (command.getStyle() != Command.CommandStyle.Secret || includeSecret)) {
+                if ((command.getStyle() != Command.CommandStyle.Back || includeBack) && (command.getStyle() != Command.CommandStyle.Secret && command.getStyle() != Command.CommandStyle.MoreOnly || includeSecret)) {
                     result.add(command);
                     if (max != null && result.size() >= max) {
                         break;
@@ -99,12 +100,21 @@ public class ControllerCommandModel extends AbstractModel implements CommandMode
 
     @Override
     public boolean shouldShowMoreOption() {
-        return (this.getCommands(null, false, false).size() >= maxBarButtons);
+        int count = 0;
+        boolean hasMoreOnly = false;
+        List<Command> commands = source.getCommands();
+        for( int i=0; i<commands.size(); i++ ) {
+            Command command = commands.get(i);
+            Command.CommandStyle commandStyle = command.getStyle();
+            if( !(commandStyle == Command.CommandStyle.Secret || commandStyle == Command.CommandStyle.Back) ) {
+                count++;
+                if( commandStyle == Command.CommandStyle.MoreOnly ) {
+                    hasMoreOnly = true;
+                    break;
+                }
+            }
+        }
+        return (count >= maxBarButtons || hasMoreOnly);
     }
 
-    @Override
-    public void requestShowMore() {
-        // default behavior
-        activity.openOptionsMenu();
-    }
 }

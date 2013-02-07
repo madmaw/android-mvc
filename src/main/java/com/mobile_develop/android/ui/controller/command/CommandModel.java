@@ -2,6 +2,7 @@ package com.mobile_develop.android.ui.controller.command;
 
 import java.util.List;
 
+import android.view.View;
 import com.mobile_develop.android.ui.Command;
 import com.mobile_develop.android.ui.controller.Model;
 
@@ -18,6 +19,4 @@ public interface CommandModel extends Model {
     String getTitle();
 
     boolean shouldShowMoreOption();
-
-    void requestShowMore();
 }

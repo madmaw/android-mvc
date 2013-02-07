@@ -5,6 +5,7 @@ import java.util.List;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import com.mobile_develop.android.ui.Command;
 import com.mobile_develop.android.ui.ErrorHandler;
@@ -19,6 +20,7 @@ public class CommandController extends AbstractController<CommandModel> {
 	private int generalButtonContainerId;
     private Integer titleTextViewId;
     private Integer noTitleViewId;
+    private CommandPopupMenuHandler popupMenuHandler;
 	
 	public CommandController(
             ViewHolderFactory viewHolderFactory,
@@ -28,13 +30,15 @@ public class CommandController extends AbstractController<CommandModel> {
             int generalButtonContainerId,
             Integer backButtonContainerId,
             Integer titleTextViewId,
-            Integer noTitleViewId) {
+            Integer noTitleViewId,
+            CommandPopupMenuHandler popupMenuHandler) {
 		super(viewHolderFactory, errorHandler, threadHelper);
 		this.viewFactory = viewFactory;
 		this.backButtonContainerId = backButtonContainerId;
 		this.generalButtonContainerId = generalButtonContainerId;
         this.titleTextViewId = titleTextViewId;
         this.noTitleViewId = noTitleViewId;
+        this.popupMenuHandler = popupMenuHandler;
 	}
 
 	@Override
@@ -68,8 +72,8 @@ public class CommandController extends AbstractController<CommandModel> {
                     moreButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            // show all commands somehow
-                            getModel().requestShowMore();
+                            // do we support popups?
+                            popupMenuHandler.showPopupMenu(v, getModel().getAllCommands());
                         }
                     });
                     viewGroup.addView(moreView);

@@ -20,6 +20,7 @@ public class CommandBarDecoratorControllerFactory implements
 	private int decoratedControllerViewId;
     private int titleTextViewId;
     private int noTitleViewId;
+    private CommandPopupMenuHandler popupMenuHandler;
 
     private int maxBarButtons;
 
@@ -41,6 +42,7 @@ public class CommandBarDecoratorControllerFactory implements
 			int backButtonContainerId,
             int titleTextViewId,
             int noTitleViewId,
+            CommandPopupMenuHandler popupMenuHandler,
 			ErrorHandler errorHandler,
 			ThreadHelper threadHelper, 
 			CommandViewFactory commandViewFactory,
@@ -62,6 +64,7 @@ public class CommandBarDecoratorControllerFactory implements
         this.noTitleViewId = noTitleViewId;
         this.commandMenuManager = commandMenuManager;
         this.maxBarButtons = maxBarButtons;
+        this.popupMenuHandler = popupMenuHandler;
         this.controllerStateListener = new ControllerStateListener() {
             @Override
             public void stateChanged(Controller source, ControllerState from, ControllerState to) {
@@ -94,7 +97,8 @@ public class CommandBarDecoratorControllerFactory implements
 				generalButtonContainerId, 
 				backButtonContainerId,
                 titleTextViewId,
-                noTitleViewId
+                noTitleViewId,
+                popupMenuHandler
 		);
 		Controller decoratorController;
 		try {

@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -23,8 +24,31 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class DialogControllerContainer {
+
     public static final AlertDialog embed(Context context, final ErrorHandler errorHandler, final Controller controller, final CharSequence cancelButtonText, Drawable icon) {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
+        return embed(context, errorHandler, controller, cancelButtonText, icon, null);
+    }
+
+    public static final AlertDialog embed(Context context, final ErrorHandler errorHandler, final Controller controller, final CharSequence cancelButtonText, Drawable icon, Integer themeId) {
+        // check the version
+
+        AlertDialog.Builder dialogBuilder;
+        if( themeId != null ) {
+            try {
+                if( AlertDialog.Builder.class.getConstructor(Context.class, Integer.TYPE) != null ) {
+                    dialogBuilder = new AlertDialog.Builder(context, themeId);
+                } else {
+                    dialogBuilder = null;
+                }
+            } catch( Exception ex ) {
+                dialogBuilder = null;
+            }
+            if( dialogBuilder == null ) {
+                dialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(context, themeId));
+            }
+        } else {
+            dialogBuilder = new AlertDialog.Builder(context);
+        }
 
         dialogBuilder.setCancelable(true);
 
