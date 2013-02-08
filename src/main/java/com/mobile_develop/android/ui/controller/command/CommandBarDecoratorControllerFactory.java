@@ -16,6 +16,7 @@ public class CommandBarDecoratorControllerFactory implements
 	
 	private int generalButtonContainerId;
 	private int backButtonContainerId;
+    private int moreButtonContainerId;
 	private int commandControllerViewId;
 	private int decoratedControllerViewId;
     private int titleTextViewId;
@@ -40,6 +41,7 @@ public class CommandBarDecoratorControllerFactory implements
 			ViewHolderFactory commandBarViewHolderFactory,
 			int generalButtonContainerId, 
 			int backButtonContainerId,
+            int moreButtonContainerId,
             int titleTextViewId,
             int noTitleViewId,
             CommandPopupMenuHandler popupMenuHandler,
@@ -58,6 +60,7 @@ public class CommandBarDecoratorControllerFactory implements
 		this.commandViewFactory = commandViewFactory;
 		this.generalButtonContainerId = generalButtonContainerId;
 		this.backButtonContainerId = backButtonContainerId;
+        this.moreButtonContainerId = moreButtonContainerId;
 		this.commandControllerViewId = commandControllerViewId;
 		this.decoratedControllerViewId = decoratedControllerViewId;
         this.titleTextViewId = titleTextViewId;
@@ -96,6 +99,7 @@ public class CommandBarDecoratorControllerFactory implements
 				commandViewFactory, 
 				generalButtonContainerId, 
 				backButtonContainerId,
+                moreButtonContainerId,
                 titleTextViewId,
                 noTitleViewId,
                 popupMenuHandler

@@ -17,6 +17,7 @@ public class CommandController extends AbstractController<CommandModel> {
 
 	private CommandViewFactory viewFactory;
 	private Integer backButtonContainerId;
+    private Integer moreButtonContainerId;
 	private int generalButtonContainerId;
     private Integer titleTextViewId;
     private Integer noTitleViewId;
@@ -29,12 +30,14 @@ public class CommandController extends AbstractController<CommandModel> {
             CommandViewFactory viewFactory,
             int generalButtonContainerId,
             Integer backButtonContainerId,
+            Integer moreButtonContainerId,
             Integer titleTextViewId,
             Integer noTitleViewId,
             CommandPopupMenuHandler popupMenuHandler) {
 		super(viewHolderFactory, errorHandler, threadHelper);
 		this.viewFactory = viewFactory;
 		this.backButtonContainerId = backButtonContainerId;
+        this.moreButtonContainerId = moreButtonContainerId;
 		this.generalButtonContainerId = generalButtonContainerId;
         this.titleTextViewId = titleTextViewId;
         this.noTitleViewId = noTitleViewId;
@@ -51,15 +54,10 @@ public class CommandController extends AbstractController<CommandModel> {
                 attachView(backCommand, viewGroup);
             }
 		}
-		ViewGroup viewGroup = getChildView(this.generalButtonContainerId);
-        if( viewGroup != null ) {
-            viewGroup.removeAllViews();
-            List<Command> generalCommands = model.getHighPriorityCommands();
-            if( generalCommands != null ) {
-                for( int i=0; i<generalCommands.size(); i++ ) {
-                    Command generalCommand = generalCommands.get( i );
-                    attachView(generalCommand, viewGroup);
-                }
+        if( this.moreButtonContainerId != null ) {
+            ViewGroup viewGroup = getChildView(moreButtonContainerId);
+            if( viewGroup != null ) {
+                viewGroup.removeAllViews();
                 CommandViewFactory.ViewAndId moreViewAndId;
                 if( model.shouldShowMoreOption() && (moreViewAndId = this.viewFactory.createMoreView()) != null ) {
                     View moreView = moreViewAndId.getView();
@@ -77,6 +75,17 @@ public class CommandController extends AbstractController<CommandModel> {
                         }
                     });
                     viewGroup.addView(moreView);
+                }
+            }
+        }
+        ViewGroup viewGroup = getChildView(this.generalButtonContainerId);
+        if( viewGroup != null ) {
+            viewGroup.removeAllViews();
+            List<Command> generalCommands = model.getHighPriorityCommands();
+            if( generalCommands != null ) {
+                for( int i=0; i<generalCommands.size(); i++ ) {
+                    Command generalCommand = generalCommands.get( i );
+                    attachView(generalCommand, viewGroup);
                 }
             }
         }
