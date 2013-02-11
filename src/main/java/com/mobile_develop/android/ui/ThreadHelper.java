@@ -3,12 +3,100 @@ package com.mobile_develop.android.ui;
 import android.app.Activity;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.concurrent.Executor;
 
 public class ThreadHelper {
+
+    public static interface Handle {
+
+    }
+
+    private class TimeThread extends Thread {
+        private class Entry implements Handle {
+            private long timeMillis;
+            private Runnable r;
+
+            public Entry(Runnable r, long timeMillis) {
+                this.r = r;
+                this.timeMillis = timeMillis;
+            }
+
+            public long getTimeMillis() {
+                return timeMillis;
+            }
+
+            public Runnable getRunnable() {
+                return r;
+            }
+        }
+
+        private List<Entry> entries;
+
+        public TimeThread() {
+            this.entries = new ArrayList<Entry>();
+        }
+
+        public Entry add(Runnable r, long timeMillis) {
+            int index = this.entries.size();
+            for( int i=0; i<this.entries.size(); i++ ) {
+                Entry entry = this.entries.get(i);
+                if( entry.getTimeMillis() > timeMillis ) {
+                    index = i;
+                    break;
+                }
+            }
+            Entry entry = new Entry(r, timeMillis);
+            this.entries.add(index, entry);
+            if( index == 0 ) {
+                ThreadHelper.this.notify();
+            }
+            return entry;
+        }
+
+        public void cancel(Handle handle) {
+            int index = this.entries.indexOf(handle);
+            this.entries.remove(index);
+            if( index == 0 ) {
+                ThreadHelper.this.notify();
+            }
+        }
+
+        @Override
+        public void run() {
+            boolean done = false;
+            while( !done ) {
+                synchronized (ThreadHelper.this) {
+                    if( entries.size() > 0 ) {
+                        Entry entry = entries.get(0);
+                        long now = System.currentTimeMillis();
+                        long diff = entry.getTimeMillis() - now;
+                        if( diff <= 0 ) {
+                            // execute and remove
+                            entries.remove(0);
+                            entry.getRunnable().run();
+                        } else {
+                            try {
+                                ThreadHelper.this.wait(diff);
+                            } catch( InterruptedException ex ) {
+                                // do nothing
+                            }
+                        }
+                    } else {
+                        done = true;
+                        timeThread = null;
+                    }
+                }
+            }
+        }
+    }
+
 	private Activity activity;
 	private Thread uiThread;
     private Executor expensiveExecutor;
+    private TimeThread timeThread;
 	
 	public ThreadHelper(Activity activity, Executor expensiveExecutor) {
 		this.activity = activity;
@@ -33,6 +121,24 @@ public class ThreadHelper {
 		Thread currentThread = Thread.currentThread();
 		return this.uiThread == currentThread;
 	}
+
+    public Handle threadAtTime(Runnable r, long timeMillis) {
+        synchronized (this) {
+            if( timeThread == null ) {
+                timeThread = new TimeThread();
+                timeThread.start();
+            }
+            return timeThread.add(r, timeMillis);
+        }
+    }
+
+    public void cancel(Handle handle) {
+        synchronized( this ) {
+            if( timeThread != null ) {
+                timeThread.cancel(handle);
+            }
+        }
+    }
 	
 	public void invoke(Runnable r) {
 		this.activity.runOnUiThread(r);
