@@ -7,8 +7,8 @@ package com.mobile_develop.android.ui;
  * Time: 6:50 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface OperationObserver {
-    void progressChanged(Integer value, Integer maxValue, String description);
+public interface OperationObserver<ProgressType> {
+    void progressChanged(Integer value, Integer maxValue, ProgressType description);
 
     void cancelableChanged(boolean cancelable);
 }

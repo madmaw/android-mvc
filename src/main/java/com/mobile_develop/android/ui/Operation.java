@@ -7,8 +7,8 @@ package com.mobile_develop.android.ui;
  * Time: 6:50 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface Operation<ResultType> {
-    ResultType perform(OperationObserver observer) throws Exception;
+public interface Operation<ResultType, ProgressType> {
+    ResultType perform(OperationObserver<ProgressType> observer) throws Exception;
 
     boolean cancelable();
 

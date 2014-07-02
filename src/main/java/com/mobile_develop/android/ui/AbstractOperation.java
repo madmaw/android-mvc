@@ -7,9 +7,9 @@ package com.mobile_develop.android.ui;
  * Time: 7:15 PM
  * To change this template use File | Settings | File Templates.
  */
-public abstract class AbstractOperation<ResultType> implements Operation<ResultType> {
+public abstract class AbstractOperation<ResultType, ProgressType> implements Operation<ResultType, ProgressType> {
 
-    protected OperationObserver observer;
+    protected OperationObserver<ProgressType> observer;
     protected boolean cancelable;
     protected boolean canceled;
     protected boolean reportsProgress;
@@ -19,7 +19,7 @@ public abstract class AbstractOperation<ResultType> implements Operation<ResultT
     }
 
     @Override
-    public ResultType perform(OperationObserver observer) throws Exception {
+    public ResultType perform(OperationObserver<ProgressType> observer) throws Exception {
         this.observer = observer;
         this.canceled = false;
         return doPerform();
@@ -49,7 +49,7 @@ public abstract class AbstractOperation<ResultType> implements Operation<ResultT
         }
     }
 
-    protected void fireOperationEvent(Integer value, Integer maxValue, String description) {
+    protected void fireOperationEvent(Integer value, Integer maxValue, ProgressType description) {
         if( this.observer != null ) {
             this.observer.progressChanged(value, maxValue, description);
         }

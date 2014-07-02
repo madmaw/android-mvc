@@ -99,7 +99,9 @@ public class TabController<ModelType extends Model> extends AbstractCompositeCon
                         remove(controller);
                     }
                 }
-                add(selectedController);
+                if( selectedController != null ) {
+                    add(selectedController);
+                }
             }
         }
     }

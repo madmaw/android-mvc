@@ -1,10 +1,10 @@
 package com.mobile_develop.android.ui;
 
-public abstract class AbstractOperationProxy<ResultType, ProxiedResultType> implements Operation<ResultType> {
+public abstract class AbstractOperationProxy<ResultType, ProgressType, ProxiedResultType> implements Operation<ResultType, ProgressType> {
 
-    private Operation<ProxiedResultType> proxied;
+    private Operation<ProxiedResultType, ProgressType> proxied;
 
-    public AbstractOperationProxy(Operation<ProxiedResultType> proxied) {
+    public AbstractOperationProxy(Operation<ProxiedResultType, ProgressType> proxied) {
         this.proxied = proxied;
     }
 

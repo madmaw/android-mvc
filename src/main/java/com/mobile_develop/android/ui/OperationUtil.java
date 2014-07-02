@@ -9,11 +9,11 @@ import java.text.NumberFormat;
 
 public class OperationUtil {
 
-    public static final <ResultType> void perform(
+    public static final <ResultType, ProgressType> void perform(
             Activity activity,
             final ThreadHelper threadHelper,
             final ErrorHandler errorHandler,
-            final Operation<ResultType> operation,
+            final Operation<ResultType, ProgressType> operation,
             String title,
             String message,
             final String errorTitle
@@ -63,9 +63,9 @@ public class OperationUtil {
                         }
                     });
                     try {
-                        result = operation.perform(new OperationObserver() {
+                        result = operation.perform(new OperationObserver<ProgressType>() {
                             @Override
-                            public void progressChanged(final Integer value, final Integer maxValue, final String description) {
+                            public void progressChanged(final Integer value, final Integer maxValue, final ProgressType description) {
                                 threadHelper.invoke(new Runnable() {
                                     @Override
                                     public void run() {
@@ -75,7 +75,13 @@ public class OperationUtil {
                                             progressDialog.setMax(maxValue);
                                             progressDialog.setProgress(value);
                                         }
-                                        progressDialog.setMessage(description);
+                                        String message;
+                                        if( description != null ) {
+                                            message = description.toString();
+                                        } else {
+                                            message = null;
+                                        }
+                                        progressDialog.setMessage(message);
                                     }
                                 });
                             }

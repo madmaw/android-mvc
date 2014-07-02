@@ -10,7 +10,7 @@ import com.mobile_develop.android.ui.controller.AbstractModel;
  * Time: 7:19 PM
  * To change this template use File | Settings | File Templates.
  */
-public class OperationLoadingModel extends AbstractModel implements LoadingModel {
+public class OperationLoadingModel<ProgressType> extends AbstractModel implements LoadingModel {
 
     private Integer currentStep;
     private Integer maxStep;
@@ -20,13 +20,13 @@ public class OperationLoadingModel extends AbstractModel implements LoadingModel
 
     }
 
-    public OperationObserver createOperationObserver() {
-        return new OperationObserver() {
+    public OperationObserver<ProgressType> createOperationObserver() {
+        return new OperationObserver<ProgressType>() {
             @Override
-            public void progressChanged(Integer value, Integer maxValue, String description) {
+            public void progressChanged(Integer value, Integer maxValue, ProgressType description) {
                 currentStep = value;
                 maxStep = maxValue;
-                message = description;
+                message = descriptionToString(description);
                 fireModelChangeEvent(LoadingModel.CHANGE_TYPE_STEP, null);
             }
 
@@ -35,6 +35,16 @@ public class OperationLoadingModel extends AbstractModel implements LoadingModel
 
             }
         };
+    }
+
+    public String descriptionToString(ProgressType progressType) {
+        String result;
+        if( progressType != null ) {
+            result = progressType.toString();
+        } else {
+            result = null;
+        }
+        return result;
     }
 
     @Override

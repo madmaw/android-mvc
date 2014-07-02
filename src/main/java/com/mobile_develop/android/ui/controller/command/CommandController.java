@@ -15,13 +15,13 @@ import com.mobile_develop.android.ui.controller.AbstractController;
 
 public class CommandController extends AbstractController<CommandModel> {
 
-	private CommandViewFactory viewFactory;
-	private Integer backButtonContainerId;
-    private Integer moreButtonContainerId;
-	private int generalButtonContainerId;
-    private Integer titleTextViewId;
-    private Integer noTitleViewId;
-    private CommandPopupMenuHandler popupMenuHandler;
+	protected CommandViewFactory viewFactory;
+    protected Integer backButtonContainerId;
+    protected Integer moreButtonContainerId;
+    protected int generalButtonContainerId;
+    protected Integer titleTextViewId;
+    protected Integer noTitleViewId;
+    protected CommandPopupMenuHandler popupMenuHandler;
 	
 	public CommandController(
             ViewHolderFactory viewHolderFactory,

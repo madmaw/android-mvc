@@ -56,16 +56,11 @@ public abstract class AbstractController<ModelType extends Model> implements Con
 		this.activeAnimations = new ArrayList<Animation>(1);
 		this.modelListener = new ModelListener() {
 			@Override
-			public void modelChanged(Model source, int changeType, Object parameter) {
+			public void modelChanged(Model source, final int changeType, final Object parameter) {
                 invoke(new Runnable() {
                     @Override
                     public void run() {
-                        try
-                        {
-                            load(AbstractController.this.model);
-                        } catch( Exception ex ) {
-                            handleError(ex);
-                        }
+                        handleChangeEvent(changeType, parameter);
                     }
                 });
 			}
@@ -171,6 +166,15 @@ public abstract class AbstractController<ModelType extends Model> implements Con
 			fireStateChangeEvent(oldControllerState, controllerState);
 		}
 	}
+
+    protected void handleChangeEvent(int changeType, Object parameter) {
+        try
+        {
+            load(AbstractController.this.model);
+        } catch( Exception ex ) {
+            handleError(ex);
+        }
+    }
 	
 	protected void handleEvent(int eventType, Object parameter ) {
 		// do nothing
