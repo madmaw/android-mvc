@@ -89,7 +89,7 @@ public class OperationUtil {
                             @Override
                             public void cancelableChanged(boolean cancelable) {
                                 progressDialog.setCancelable(cancelable);
-                            }`
+                            }
                         });
                     } finally {
                         Runnable r = new Runnable() {

@@ -15,4 +15,8 @@ public class StringUtil {
         return result;
     }
 
+    public static boolean emptyOrNull(CharSequence s) {
+    	return s == null || s.toString().trim().length() == 0;
+    }
+
 }
